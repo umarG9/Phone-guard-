@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TsaroGuard</title>
+<style>
+:root{--bg:#eef2f6;--panel:#fff;--ink:#14213d;--mute:#5b6b82;--line:#d3dbe6;--acc:#1d4ed8;--accink:#fff;--ok:#146c43;--okbg:#dff3e7;--warn:#8a5300;--warnbg:#fdf0d2;--bad:#a01c1c;--badbg:#fbe0e0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1523;--panel:#152033;--ink:#e8eef7;--mute:#93a3ba;--line:#2a3a54;--acc:#6b9bff;--accink:#0d1523;--ok:#6fdc9f;--okbg:#10362a;--warn:#f2c364;--warnbg:#3a2d0e;--bad:#ff9a9a;--badbg:#411818}}
+:root[data-theme="dark"]{--bg:#0d1523;--panel:#152033;--ink:#e8eef7;--mute:#93a3ba;--line:#2a3a54;--acc:#6b9bff;--accink:#0d1523;--ok:#6fdc9f;--okbg:#10362a;--warn:#f2c364;--warnbg:#3a2d0e;--bad:#ff9a9a;--badbg:#411818}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:560px;margin:0 auto;padding:20px 16px 40px}
+h1{font:700 30px/1.15 Georgia,"Times New Roman",serif;margin:8px 0 6px}
+h2{font:700 20px/1.25 Georgia,serif;margin:0 0 4px}
+h3{font:700 16px/1.3 system-ui,sans-serif;margin:18px 0 4px}
+.lead{color:var(--mute);margin:0 0 22px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+p.hint{color:var(--mute);font-size:14px;margin:0 0 12px}
+textarea,input[type=password]{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:110px;resize:vertical}
+button,a.btn{display:block;margin-top:10px;width:100%;padding:13px;border:0;border-radius:10px;background:var(--acc);color:var(--accink);font:600 16px system-ui,sans-serif;text-align:center;text-decoration:none;cursor:pointer}
+a.btn.alt{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+button:focus-visible,a.btn:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.res{display:none;margin-top:14px;padding:14px;border-radius:10px}
+.res.on{display:block}
+.res.ok{background:var(--okbg);color:var(--ok)}.res.warn{background:var(--warnbg);color:var(--warn)}.res.bad{background:var(--badbg);color:var(--bad)}
+.res b{display:block;font-size:17px;margin-bottom:6px}
+.res ul{margin:6px 0 0;padding-left:20px}
+.res li{margin:3px 0;color:var(--ink)}
+.meter{height:8px;border-radius:8px;background:var(--line);margin-top:10px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:currentColor;transition:width .25s}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.chk input{width:22px;height:22px;margin-top:2px;flex:none}
+.chk label{flex:1}
+.prog{font-weight:600;margin:0 0 6px}
+.callout{background:var(--warnbg);color:var(--warn);padding:12px;border-radius:10px;font-size:14px;margin:0 0 12px}
+.callout b{color:inherit}
+.note{font-size:13px;color:var(--mute);margin-top:22px}
+@media (prefers-reduced-motion:reduce){.meter i{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>TsaroGuard</h1>
+<p class="lead">Four tools to protect yourself from scams and phone theft. Anything you type stays on your device and is never sent anywhere.</p>
+
+<section>
+<h2>Check a suspicious message</h2>
+<p class="hint">Paste an SMS, WhatsApp or email you received. It lists the scam signs it finds.</p>
+<textarea id="msg" placeholder="Paste the message here"></textarea>
+<button id="bMsg">Check message</button>
+<div id="rMsg" class="res" aria-live="polite"></div>
+</section>
+
+<section>
+<h2>Test password strength</h2>
+<p class="hint">Don’t type the password you use right now. Test a similar one instead.</p>
+<input type="password" id="pw" autocomplete="off" placeholder="Type a test password">
+<div id="rPw" class="res" aria-live="polite"></div>
+</section>
+
+<section>
+<h2>Account security checklist</h2>
+<p class="prog" id="prog1"></p>
+<div class="meter" style="color:var(--ok)"><i id="bar1"></i></div>
+<div id="list1" style="margin-top:8px"></div>
+</section>
+
+<section>
+<h2>Find a lost phone</h2>
+<div class="callout"><b>Important:</b> TsaroGuard cannot track your phone by itself. Your phone’s built-in service can show it on a map, but only if you turn it on <b>before</b> the phone is lost. Set it up now.</div>
+
+<h3>Set up now (2 minutes)</h3>
+<p class="prog" id="prog2"></p>
+<div class="meter" style="color:var(--ok)"><i id="bar2"></i></div>
+<div id="list2" style="margin-top:8px"></div>
+
+<h3>If your phone is already lost</h3>
+<p class="hint">Sign in from another phone or a computer with the same account you use on the lost phone.</p>
+<a class="btn" href="https://www.google.com/android/find" target="_blank" rel="noopener noreferrer">Android: open Google Find Hub</a>
+<a class="btn alt" href="https://www.icloud.com/find" target="_blank" rel="noopener noreferrer">iPhone: open Apple Find My</a>
+
+<h3>Then do these, in order</h3>
+<p class="prog" id="prog3"></p>
+<div class="meter" style="color:var(--ok)"><i id="bar3"></i></div>
+<div id="list3" style="margin-top:8px"></div>
+</section>
+
+<p class="note">This tool checks for warning signs only and cannot confirm that a message is genuine. If money was taken from your account, call your bank using the number on the back of your card or on the bank’s official website.</p>
+</main>
+
+<script>
+function el(t,txt,cls){var e=document.createElement(t);if(txt)e.textContent=txt;if(cls)e.className=cls;return e}
+
+/* ---------- 1. Message check ---------- */
+var SHORT=["bit.ly","tinyurl.com","t.co","cutt.ly","rb.gy","is.gd","shorturl.at","ow.ly"];
+var BADTLD=[".xyz",".top",".click",".icu",".buzz",".live",".monster",".cfd",".sbs"];
+var BANKS=["bank","gtb","zenith","access","firstbank","uba","opay","palmpay","kuda","moniepoint","fcmb","sterling","wema"];
+
+function analyse(text){
+  var t=text.toLowerCase(), score=0, why=[], tips=[];
+  var neg=/(do not share|don'?t share|never share|kada ka bayar|kar ka bayar)/.test(t);
+  var sens=/\b(otp|pin|cvv|bvn|nin|password|token|card number|lambar katin)\b/.test(t);
+  var ask=/\b(send|share|provide|enter|confirm|verify|update|reply|tura|aiko|bayar|shigar|tabbatar)\b/.test(t);
+  if(sens&&ask&&!neg){score+=40;why.push("It asks for private details (OTP, PIN, BVN or password). A real bank never asks for these.")}
+  else if(sens&&neg){tips.push("The message mentions OTP/PIN only as a warning, which is normal for bank alerts.")}
+
+  var urls=text.match(/https?:\/\/[^\s]+|\b(?:bit\.ly|tinyurl\.com|t\.co|cutt\.ly|rb\.gy|is\.gd|shorturl\.at|ow\.ly)\/\S+/gi)||[];
+  if(urls.length){
+    score+=15;why.push("It contains a link. Don’t tap it until you’ve confirmed who sent it.");
+    urls.forEach(function(u){
+      var host=u.replace(/^https?:\/\//i,"").split(/[\/?#]/)[0].toLowerCase();
+      var labels=host.split("."), n=/\.(com|co|org|gov)\.ng$/.test(host)?3:2;
+      var main=labels.slice(-n).join("."), prefix=host.slice(0,host.length-main.length);
+      if(SHORT.indexOf(host)>-1){score+=25;why.push("The link “"+host+"” is shortened, which hides the real website.")}
+      if(/^\d{1,3}(\.\d{1,3}){3}$/.test(host)){score+=25;why.push("The link uses a raw IP address instead of a website name.")}
+      if(BADTLD.some(function(x){return host.slice(-x.length)===x})){score+=20;why.push("The ending of “"+host+"” is often used in scams.")}
+      var kwInPrefix=BANKS.some(function(k){return prefix.indexOf(k)>-1});
+      var kwHyphen=host.indexOf("-")>-1&&BANKS.some(function(k){return host.indexOf(k)>-1});
+      if(kwInPrefix||kwHyphen){score+=20;why.push("“"+host+"” looks like a bank website but isn’t the bank’s own domain.")}
+      if(/^http:\/\//i.test(u)){score+=10;why.push("The link doesn’t use https.")}
+    });
+  }
+  if(/(urgent|immediately|within 24|expire|suspend|blocked|deactivat|restricted|yanzu|cikin awa|za a rufe|za a toshe)/.test(t)){score+=20;why.push("It pressures you to act fast or threatens to close your account.")}
+  if(/(congratulations|winner|you have won|prize|giveaway|loan approved|free data|lashe|kyauta)/.test(t)){score+=25;why.push("It promises a prize, free gift or loan you didn’t apply for.")}
+  if(/(anydesk|teamviewer|remote access)/.test(t)){score+=30;why.push("It asks you to install an app that gives someone remote control of your phone.")}
+  if(/(debit|debited|dr\s?:|dr\s?ngn)/.test(t)&&/(ngn|₦|n\s?\d)/.test(t)){tips.push("If you didn’t make this transaction, call your bank on the number printed on your card and block the card in your banking app.")}
+  return {score:Math.min(score,100),why:why,tips:tips};
+}
+
+document.getElementById("bMsg").onclick=function(){
+  var v=document.getElementById("msg").value.trim(), box=document.getElementById("rMsg");
+  box.className="res on";box.textContent="";
+  if(!v){box.classList.add("warn");box.appendChild(el("b","Nothing to check"));box.appendChild(el("span","Paste a message first."));return}
+  var r=analyse(v), lvl=r.score>=55?"bad":r.score>=25?"warn":"ok";
+  var title=lvl==="bad"?"Very likely a scam":lvl==="warn"?"Something looks suspicious":"No major scam signs found";
+  box.classList.add(lvl);box.appendChild(el("b",title+" ("+r.score+"/100)"));
+  if(r.why.length){var ul=el("ul");r.why.forEach(function(w){ul.appendChild(el("li",w))});box.appendChild(ul)}
+  else box.appendChild(el("span","That isn’t a guarantee. If the sender is unknown, confirm with your bank directly."));
+  if(r.tips.length){var u2=el("ul");r.tips.forEach(function(w){u2.appendChild(el("li",w))});box.appendChild(u2)}
+};
+
+/* ---------- 2. Password strength ---------- */
+var COMMON=["password","123456","12345678","qwerty","admin","iloveyou","welcome","abc123","nigeria","letmein","11111","000000","arewa","kano","lagos","allah","bismillah"];
+document.getElementById("pw").oninput=function(){
+  var p=this.value, box=document.getElementById("rPw");
+  box.textContent="";
+  if(!p){box.className="res";return}
+  var pool=0;
+  if(/[a-z]/.test(p))pool+=26;if(/[A-Z]/.test(p))pool+=26;if(/\d/.test(p))pool+=10;if(/[^A-Za-z0-9]/.test(p))pool+=32;
+  var bits=p.length*Math.log(pool||1)/Math.LN2, notes=[], low=p.toLowerCase();
+  if(COMMON.some(function(c){return low.indexOf(c)>-1})){bits=Math.min(bits,20);notes.push("It contains a very common word.")}
+  if(/(.)\1{2,}/.test(p)){bits-=10;notes.push("It repeats the same character.")}
+  if(/(0123|1234|2345|3456|4567|5678|6789|abcd|qwer)/.test(low)){bits-=12;notes.push("It contains a simple sequence.")}
+  if(/\b(19|20)\d{2}\b/.test(p)){bits-=6;notes.push("Years are easy to guess.")}
+  if(p.length<10)notes.push("It’s too short. Use at least 12 characters.");
+  bits=Math.max(0,bits);
+  var lvl=bits<40?"bad":bits<60?"warn":"ok", name=bits<40?"Weak":bits<60?"Fair":"Strong";
+  box.className="res on "+lvl;
+  box.appendChild(el("b",name+" (about "+Math.round(bits)+" bits)"));
+  var m=el("div",null,"meter");m.style.color="currentColor";var i=el("i");i.style.width=Math.min(100,bits/80*100)+"%";m.appendChild(i);box.appendChild(m);
+  var ul=el("ul");(notes.length?notes:["Use a phrase of 4 or more random words, and keep it in a password manager."]).forEach(function(n){ul.appendChild(el("li",n))});box.appendChild(ul);
+};
+
+/* ---------- Checklists ---------- */
+function mkList(key,items,listId,progId,barId){
+  var state={};
+  try{state=JSON.parse(localStorage.getItem(key)||"{}")||{}}catch(e){state={}}
+  var list=document.getElementById(listId);
+  function draw(){
+    var n=0;items.forEach(function(x){if(state[x[0]])n++});
+    document.getElementById(progId).textContent=n+" of "+items.length+" done";
+    document.getElementById(barId).style.width=(n/items.length*100)+"%";
+  }
+  items.forEach(function(x,idx){
+    var row=el("div",null,"chk"),cb=el("input");cb.type="checkbox";cb.id=key+x[0];cb.checked=!!state[x[0]];
+    var lb=el("label",x[1]);lb.htmlFor=cb.id;
+    cb.onchange=function(){state[x[0]]=cb.checked;try{localStorage.setItem(key,JSON.stringify(state))}catch(e){}draw()};
+    if(idx===0)row.style.borderTop="0";
+    row.appendChild(cb);row.appendChild(lb);list.appendChild(row);
+  });
+  draw();
+}
+
+mkList("tg_acct",[
+ ["a1","Turn on two-step verification (2FA) on your email."],
+ ["a2","Turn on 2FA on Instagram, ideally with an authenticator app."],
+ ["a3","Turn on Two-step verification in WhatsApp."],
+ ["a4","WhatsApp: Settings > Linked devices. Log out any device you don’t recognise."],
+ ["a5","Instagram: Accounts Centre > Password and security > Where you’re logged in. Log out of places that aren’t yours."],
+ ["a6","Use a different password for every account, especially email and banking."],
+ ["a7","Never give your OTP or PIN to anyone, even someone claiming to be from your bank."],
+ ["a8","Save your bank’s phone number from the back of your card in your contacts."]
+],"list1","prog1","bar1");
+
+mkList("tg_setup",[
+ ["s1","Android: open Settings > Google > Find Hub (Find My Device) and turn it on. iPhone: Settings > your name > Find My > Find My iPhone."],
+ ["s2","Turn on Location for the phone, and keep it on."],
+ ["s3","iPhone: also turn on “Send Last Location”. Android: allow Find Hub to find the phone when it’s offline."],
+ ["s4","Set a screen lock (PIN, pattern or fingerprint) and a SIM PIN."],
+ ["s5","Write down your phone’s IMEI (dial *#06#) and keep it somewhere other than the phone."],
+ ["s6","Know the Google or Apple account password, and have a recovery email or number you can reach from another device."]
+],"list2","prog2","bar2");
+
+mkList("tg_lost",[
+ ["l1","Sign in to Find Hub or Find My (buttons above) and see the phone’s last known location."],
+ ["l2","Play a sound if you think it’s nearby."],
+ ["l3","Lock the phone or mark it as lost, and add a message with another number to reach you."],
+ ["l4","If it can’t be found, go to the police with the IMEI before you erase the phone, and do not go to the location alone."],
+ ["l5","Call your mobile network to block the SIM, then get a replacement with the same number."],
+ ["l6","Change your email, bank, WhatsApp and social media passwords from another device."],
+ ["l7","Tell your bank so they can block cards and stop mobile banking on that phone."],
+ ["l8","Erase the phone remotely only as a last step, because it stops tracking."]
+],"list3","prog3","bar3");
+</script>
+</body>
+</html>
